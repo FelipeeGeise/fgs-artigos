@@ -1,0 +1,190 @@
+/* 1. Layout Base */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1a2a40;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 50px;
+  font-size: 1.1rem;
+}
+
+/* 📱 GRID INTELIGENTE (Otimizado para 2026) */
+.grid {
+  display: grid;
+  /* auto-fill pode deixar espaços vazios no final; auto-fit expande os cards para preencher a linha */
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+  width: 100%;
+}
+
+/* 2. Card de Produto */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #eee;
+  display: flex;
+  flex-direction: column;
+  height: 100%; 
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+/* 3. Centralização da Imagem (Correção de Desvio) */
+.imageLink {
+  position: relative;
+  display: flex; /* Flexbox é superior ao block para centralizar imagens */
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: pointer;
+  background: #fdfdfd; 
+  height: 320px; 
+  width: 100%;
+}
+
+.productImage {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain; /* Garante que o livro nunca seja cortado ou esticado */
+  padding: 25px; /* Respiro interno para a arte da capa */
+  transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+  margin: auto; /* Centralização garantida em navegadores antigos */
+}
+
+/* Overlay sutil */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.04); /* Mais sutil para um visual premium */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-weight: 700;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none; /* Não interfere no clique */
+}
+
+.imageLink:hover .overlay { opacity: 1; }
+.imageLink:hover .productImage { transform: scale(1.08); }
+
+/* 4. Informações e Tipografia (Com Line-Clamp Robusto) */
+.productInfo { 
+  padding: 20px; 
+  text-align: center; 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+}
+
+.productName { 
+  font-size: 1.1rem; 
+  font-weight: 700; 
+  color: #1a1a1a; 
+  margin-bottom: 12px; 
+  cursor: pointer; 
+  transition: color 0.2s;
+  text-decoration: none;
+
+  /* 🔥 LINE-CLAMP: Compatibilidade total e altura fixa */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2; /* Propriedade padrão moderna */
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  
+  /* Mantém o alinhamento mesmo se o título tiver só 1 linha */
+  height: 2.8rem; 
+  line-height: 1.4rem;
+}
+
+.productName:hover { color: #2d6cdf; }
+
+.price { 
+  font-size: 1.4rem; 
+  font-weight: 800; 
+  color: #2d6cdf; 
+  margin: auto 0 20px; /* O 'auto' no topo empurra o preço e o botão para o fundo */
+}
+
+/* 5. Botões */
+.button {
+  background: #111;
+  color: #fff;
+  border: none;
+  padding: 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.button:hover { 
+  background: #2d6cdf; 
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(45, 108, 223, 0.3);
+}
+
+.loader { text-align: center; padding: 100px; font-weight: 600; color: #888; }
+
+/* ===== 📱 RESPONSIVIDADE ===== */
+
+@media (max-width: 992px) {
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .container { padding: 30px 15px; }
+  .title { font-size: 1.8rem; }
+  
+  .grid { 
+    grid-template-columns: 1fr 1fr; /* Duas colunas mantidas */
+    gap: 12px; 
+  }
+  
+  .card { border-radius: 12px; }
+  .imageLink { height: 200px; } /* Ajuste leve para melhor proporção */
+  
+  .productInfo { padding: 12px; }
+  
+  .productName { 
+    font-size: 0.95rem; 
+    height: 2.6rem; 
+    line-height: 1.3rem;
+  }
+  
+  .price { font-size: 1.15rem; margin-bottom: 12px; }
+  .button { padding: 10px; font-size: 0.85rem; }
+}
+
+@media (max-width: 380px) {
+  .grid { grid-template-columns: 1fr; }
+  .imageLink { height: 280px; }
+}

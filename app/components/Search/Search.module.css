@@ -1,0 +1,64 @@
+.container {
+  width: 100%;
+  max-width: 600px; /* Largura elegante no desktop */
+  margin: 0 auto 30px auto; /* Centraliza e afasta do carrossel */
+  padding: 0 20px;
+}
+
+.inputWrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  position: absolute;
+  left: 15px;
+  color: #9ca3af;
+  pointer-events: none;
+  transition: color 0.3s ease;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 15px 14px 45px; /* Espaço para o ícone na esquerda */
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  font-size: 1rem;
+  background-color: #ffffff;
+  color: #1a2a40;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+/* Efeito ao clicar para digitar */
+.input:focus {
+  border-color: #facc15; /* Dourado da sua marca */
+  box-shadow: 0 4px 15px rgba(250, 204, 21, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Muda a cor da lupa quando o usuário clica no input */
+.input:focus + .icon {
+  color: #facc15;
+}
+
+/* Hover simples */
+.input:hover {
+  border-color: #d1d5db;
+}
+
+/* ===== 📱 RESPONSIVIDADE ===== */
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 100%; /* Ocupa a largura toda no mobile */
+    margin-bottom: 20px;
+  }
+
+  .input {
+    font-size: 0.9rem;
+    padding: 12px 12px 12px 40px;
+  }
+}

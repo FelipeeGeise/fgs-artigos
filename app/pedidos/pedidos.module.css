@@ -1,0 +1,190 @@
+/* pedidos.module.css */
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: 'Inter', sans-serif;
+  color: #333;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.backLink:hover {
+  color: #155ab6;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 50px 20px;
+  text-align: center;
+  color: #555;
+}
+
+.emptyState p {
+  font-size: 1.1rem;
+}
+
+.button {
+  background-color: #1a73e8;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: #155ab6;
+}
+
+.ordersList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.orderCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fff;
+  transition: box-shadow 0.2s;
+}
+
+.orderCard:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.orderInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.orderHeader {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.orderId {
+  font-weight: 600;
+}
+
+.orderDate {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.orderStatus {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 500;
+}
+
+.statusText {
+  font-size: 0.95rem;
+}
+
+.orderSummary {
+  font-size: 0.9rem;
+  color: #777;
+}
+
+.orderTotal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.priceTag {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+}
+
+.priceTag span {
+  font-size: 0.85rem;
+  color: #999;
+}
+
+.priceTag strong {
+  font-size: 1rem;
+  color: #333;
+}
+
+/* RESPONSIVO */
+@media (max-width: 768px) {
+  .orderCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .orderTotal {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .header {
+    align-items: flex-start;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 15px;
+  }
+
+  .button {
+    width: 100%;
+    text-align: center;
+  }
+
+  .orderHeader {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .priceTag {
+    text-align: left;
+  }
+}

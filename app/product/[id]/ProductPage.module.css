@@ -1,0 +1,256 @@
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  box-sizing: border-box;
+}
+
+.header {
+  margin-bottom: 30px;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #555;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.backLink:hover { color: #2d6cdf; }
+
+/* ESTRUTURA LADO A LADO */
+.productWrapper {
+  display: flex;
+  flex-direction: column; /* Mobile */
+  gap: 40px;
+  align-items: center;
+}
+
+@media (min-width: 992px) {
+  .productWrapper {
+    flex-direction: row; /* Desktop Lado a Lado */
+    align-items: flex-start;
+    gap: 80px;
+    margin-top: 40px;
+  }
+
+  .imageBox {
+    flex: 1;
+    position: sticky; /* Imagem fica fixa enquanto rola o texto se for longo */
+    top: 20px;
+  }
+
+  .infoCol {
+    flex: 1;
+  }
+}
+
+/* BOX DA IMAGEM */
+.imageBox {
+  width: 100%;
+  background: #f9fafb;
+  border-radius: 32px;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.mainImage {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 40px rgba(0,0,0,0.1));
+}
+
+/* COLUNA DE INFORMAÇÕES */
+.infoCol {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.categoryTag {
+  background: #eff6ff;
+  color: #2d6cdf;
+  padding: 6px 14px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.productName {
+  font-size: 2.5rem;
+  color: #111;
+  font-weight: 800;
+  margin: 15px 0 0 0;
+  line-height: 1.1;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  color: #2d6cdf;
+}
+
+.currency { font-size: 1.2rem; font-weight: 600; }
+.priceValue { font-size: 2.8rem; font-weight: 800; }
+
+/* DESCRIÇÃO - AQUI ESTÁ O RESPIRO CORRIGIDO */
+.descriptionBox {
+  margin-top: 20px;
+  padding: 10px 20px 10px 30px; /* 30px de espaço na esquerda */
+  border-left: 5px solid #e5e7eb;
+  background-color: #fafafa;
+  border-radius: 0 12px 12px 0;
+}
+
+.descriptionBox h3 {
+  font-size: 1.1rem;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.descriptionBox p {
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #4b5563;
+  text-align: justify;
+}
+
+/* BOTÕES DE AÇÃO */
+.actionButtons {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+}
+
+.buyButton {
+  flex: 1;
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 20px;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  transition: all 0.3s;
+}
+
+.buyButton:hover {
+  background: #2d6cdf;
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(45, 108, 223, 0.25);
+}
+
+.favBtn, .favBtnActive {
+  padding: 18px;
+  border-radius: 16px;
+  border: 2px solid #eee;
+  background: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.favBtnActive { border-color: #ff4b4b; }
+.favBtn:hover { border-color: #999; }
+
+/* UTILS */
+.loadingContainer {
+  height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.spinner { animation: rotate 1s linear infinite; color: #2d6cdf; }
+@keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+
+/* --- SEÇÃO DE PRODUTOS RELACIONADOS --- */
+.relatedProductsSection {
+  margin-top: 80px;
+  padding-top: 60px;
+  border-top: 1px solid #eee;
+  width: 100%;
+}
+
+/* Título para a seção de baixo */
+.relatedProductsSection h2 {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 30px;
+}
+
+/* --- BOTÃO FLUTUANTE DO WHATSAPP --- */
+.whatsappFloating {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background-color: #25d366;
+  color: white;
+  width: 65px;
+  height: 65px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.whatsappFloating:hover {
+  transform: scale(1.1) translateY(-5px);
+  background-color: #128c7e;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+}
+
+/* Efeito visual de atenção (opcional, mas recomendado) */
+.whatsappFloating::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #25d366;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Ajuste mobile para o botão não sobrepor elementos importantes */
+@media (max-width: 768px) {
+  .whatsappFloating {
+    bottom: 20px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+  }
+  
+  .relatedProductsSection {
+    margin-top: 50px;
+    padding-top: 40px;
+  }
+}

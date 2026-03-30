@@ -1,0 +1,246 @@
+/* Container Principal */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  min-height: 80vh;
+  background-color: #fff;
+}
+
+/* Cabeçalho da Página */
+.header {
+  margin-bottom: 40px;
+}
+
+.backLink {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  text-decoration: none;
+  margin-bottom: 20px;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.backLink:hover {
+  color: #0070f3;
+}
+
+.pageTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 2rem;
+  color: #333;
+  margin: 0;
+}
+
+.iconFilled {
+  color: #e74c3c;
+  fill: #e74c3c;
+  animation: heartBeat 0.3s ease-in-out;
+}
+
+/* Estado Vazio (Empty State) */
+.emptyState {
+  text-align: center;
+  padding: 80px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: #f9f9f9;
+  border-radius: 16px;
+  border: 2px dashed #eee;
+}
+
+.emptyIcon {
+  color: #ccc;
+  margin-bottom: 10px;
+}
+
+.button {
+  background-color: #0070f3;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(0, 112, 243, 0.39);
+}
+
+.button:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 112, 243, 0.23);
+}
+
+/* Grid de Produtos */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+/* Card do Produto */
+.card {
+  display: flex;
+  background: white;
+  border: 1px solid #efefef;
+  border-radius: 16px;
+  padding: 16px;
+  gap: 16px;
+  align-items: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.card:hover {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  border-color: #d1d1d1;
+  transform: translateY(-4px);
+}
+
+/* CORREÇÃO DE CENTRALIZAÇÃO AQUI */
+.imageWrapper {
+  flex-shrink: 0;
+  width: 100px;
+  height: 100px;
+  background: #fcfcfc;
+  border-radius: 12px;
+  display: flex;           /* Habilita Flexbox */
+  align-items: center;     /* Centraliza verticalmente */
+  justify-content: center; /* Centraliza horizontalmente */
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+}
+
+.productImg {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;          /* Remove espaços em branco de elementos inline */
+  transition: transform 0.3s ease;
+}
+
+.card:hover .productImg {
+  transform: scale(1.1);
+}
+
+/* Informações do Produto */
+.info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.info h3 {
+  font-size: 16px;
+  line-height: 1.4;
+  margin: 0 0 8px 0;
+  color: #333;
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.price {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #27ae60;
+  margin-bottom: 12px;
+}
+
+/* Ações (Botões) */
+.actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.addToCartBtn {
+  background: #0070f3;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background 0.2s;
+  flex: 1;
+}
+
+.addToCartBtn:hover:not(:disabled) {
+  background: #0051ad;
+}
+
+.addToCartBtn:disabled {
+  background: #e0e0e0;
+  color: #888;
+  cursor: not-allowed;
+}
+
+.removeBtn {
+  background: #fff5f5;
+  color: #ff4d4d;
+  border: 1px solid #ffebeb;
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.removeBtn:hover {
+  background: #ff4d4d;
+  color: white;
+  border-color: #ff4d4d;
+}
+
+/* Animação */
+@keyframes heartBeat {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+/* Responsividade Mobile */
+@media (max-width: 480px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .imageWrapper {
+    width: 140px;
+    height: 140px;
+    margin: 0 auto;
+  }
+
+  .actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .addToCartBtn, .removeBtn {
+    width: 100%;
+  }
+}

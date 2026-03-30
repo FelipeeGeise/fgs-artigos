@@ -1,0 +1,192 @@
+.container {
+  padding: 40px 20px; /* Ajustado para evitar encostar nas bordas */
+  max-width: 650px;
+  margin: 0 auto;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.title {
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #eee;
+  padding-bottom: 15px;
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+.formCard {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #efefef;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  margin-bottom: -12px;
+}
+
+.input, .select {
+  padding: 14px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box; /* Fundamental para o padding não quebrar a largura */
+}
+
+.input:focus, .select:focus {
+  border-color: #3498db;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Preço e Categoria lado a lado no Desktop */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.row div {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.saveButton {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.saveButton:hover {
+  background-color: #2ecc71;
+  transform: translateY(-2px);
+}
+
+.helperText {
+  color: #888;
+  font-size: 0.75rem;
+  margin-top: -12px;
+  line-height: 1.4;
+}
+
+/* ===== TABELA E LISTAGEM ===== */
+.listCard {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-top: 2rem;
+  overflow-x: auto; /* Proteção inicial contra estouro */
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th, .table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  color: #666;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.deleteButton {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: 0.2s;
+}
+
+.deleteButton:hover { background: #c0392b; }
+
+/* ===== 📱 RESPONSIVIDADE ===== */
+
+@media (max-width: 600px) {
+  .container { padding: 20px 15px; }
+
+  .title { font-size: 1.5rem; }
+
+  .formCard, .listCard { padding: 20px; }
+
+  .row {
+    grid-template-columns: 1fr; /* Coloca campos um embaixo do outro no celular */
+    gap: 18px;
+  }
+
+  /* 🛠️ MÁGICA DA TABELA RESPONSIVA: transforma a tabela em cards no mobile */
+  .table, .table thead, .table tbody, .table th, .table td, .table tr {
+    display: block;
+  }
+
+  .table thead { display: none; } /* Esconde o cabeçalho original */
+
+  .table tr {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #fdfdfd;
+  }
+
+  .table td {
+    border: none;
+    position: relative;
+    padding-left: 50%; /* Espaço para o "título" do campo */
+    text-align: right;
+    font-size: 0.9rem;
+  }
+
+  /* Adiciona rótulos antes dos dados usando pseudo-elementos (opcional, mas recomendado no JS/HTML) */
+  .table td::before {
+    content: attr(data-label); /* Exige que você adicione data-label="Nome" no HTML */
+    position: absolute;
+    left: 10px;
+    width: 45%;
+    text-align: left;
+    font-weight: bold;
+    color: #888;
+  }
+
+  .deleteButton {
+    width: 100%; /* Botão de excluir ocupa a largura toda no mobile */
+    margin-top: 10px;
+    padding: 12px;
+  }
+}

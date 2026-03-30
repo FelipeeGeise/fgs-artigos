@@ -1,0 +1,65 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // ✅ MUDAMOS DE SQLITE PARA POSTGRESQL AQUI:
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  createdAt    DateTime    @default(now())
+  
+  // Dados do Cliente (Baseado no seu CustomerData)
+  customerName String
+  cpf          String
+  whatsapp     String
+  email        String
+  
+  // Endereço de Entrega
+  cep          String
+  logradouro   String
+  numero       String
+  bairro       String
+  cidade       String
+  uf           String
+  
+  // Financeiro
+  total        Float       // O que o cliente pagou (Ex: R$ 100)
+  status       String      @default("PENDENTE") // PENDENTE, PAGO, ENVIADO, ENTREGUE, CANCELADO
+  paymentId    String?     // ID que vem do Mercado Pago/Stripe para conferência
+  
+  // Logística de Dropshipping
+  trackingCode String?     // O código que o fornecedor te passar depois
+  
+  items        OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  productId String
+  name      String
+  price     Float   // Preço de venda no momento da compra
+  quantity  Int
+  
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId   String
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  category    String
+  image       String
+  
+  // ✅ ESSENCIAL PARA DROPSHIPPING
+  price       Float    // Preço de Venda (Ex: R$ 100)
+  costPrice   Float    @default(0) // Preço de Custo no Fornecedor (Ex: R$ 80)
+  supplierUrl String?  // Link do fornecedor (AliExpress, Shopee, etc)
+  
+  active      Boolean  @default(true) // Em vez de stock, usamos se o produto está ativo
+  createdAt   DateTime @default(now())
+}

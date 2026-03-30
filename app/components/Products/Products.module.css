@@ -1,0 +1,265 @@
+.section {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 60px 24px;
+  scroll-margin-top: 100px; 
+}
+
+.title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1a2a40;
+  margin-bottom: 40px;
+}
+
+.carouselWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.grid {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px 5px;
+  scroll-behavior: smooth;
+  scrollbar-width: none; 
+  -ms-overflow-style: none;
+  width: 100%;
+}
+
+.grid::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===== CARD ===== */
+.card {
+  flex: 0 0 280px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box; /* Garante que o padding não aumente o tamanho do card */
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  border-color: #facc15;
+}
+
+/* CONTAINER DA IMAGEM CORRIGIDO */
+.imageContainer {
+  width: 100%;
+  height: 220px;
+  position: relative;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* 🔥 Impede que a imagem saia do container */
+  border-radius: 8px;
+}
+
+.image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Mantém a proporção sem cortar */
+}
+
+.name {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a2a40;
+  margin-bottom: 8px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; 
+  line-clamp: 2;         
+  overflow: hidden;
+  text-overflow: ellipsis;
+  height: 2.8rem; 
+  line-height: 1.4rem;
+}
+
+.price {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1a2a40;
+  margin-bottom: 15px;
+}
+
+/* Botões */
+.activeButton {
+  background: #1a2a40;
+  color: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.activeButton:hover {
+  background: #2c415e;
+}
+
+.disabledButton {
+  background: #e5e7eb;
+  color: #9ca3af;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: not-allowed;
+}
+
+/* SETAS */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+  font-size: 18px;
+  color: #1a2a40;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  transition: all 0.3s ease;
+}
+
+.prev { left: -22.5px; }
+.next { right: -22.5px; }
+
+/* ===== 📱 RESPONSIVIDADE (MOBILE) ===== */
+
+@media (max-width: 768px) {
+  .section {
+    padding: 40px 0px; /* Reduzi as laterais para o card respirar */
+  }
+
+  .grid {
+    gap: 0;
+    scroll-snap-type: x mandatory;
+  }
+
+  .card {
+    flex: 0 0 100%; 
+    scroll-snap-align: center;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 20px; /* Padding interno para o conteúdo não colar na borda da tela */
+    box-sizing: border-box;
+  }
+
+  .imageContainer {
+    height: 250px; /* Um pouco maior no mobile */
+    width: 90%;    /* Reduz um pouco a largura interna para garantir margem */
+    margin: 0 auto 15px auto;
+  }
+
+  .prev { left: 10px; }
+  .next { right: 10px; }
+
+  .navButton {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.6rem;
+  }
+  
+  .name {
+    font-size: 1.1rem;
+    height: 3rem;
+    line-height: 1.5rem;
+    text-align: center;
+  }
+
+  .price {
+    text-align: center;
+    font-size: 1.4rem;
+  }
+
+  .imageContainer {
+    height: 280px; /* Destaque total para o produto */
+  }
+}
+
+/* --- BOTÃO FLUTUANTE DE WHATSAPP --- */
+.whatsappFlutuante {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  width: 60px;
+  height: 60px;
+  background-color: #25d366;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+/* Efeito de aumentar ao passar o mouse */
+.whatsappFlutuante:hover {
+  transform: scale(1.1);
+  background-color: #128c7e;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Ícone dentro do botão */
+.whatsappIcon {
+  fill: currentColor;
+  width: 32px;
+  height: 32px;
+}
+
+/* Responsividade do botão no Mobile */
+@media (max-width: 768px) {
+  .whatsappFlutuante {
+    bottom: 20px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+  }
+}
+
+/* --- AJUSTE PARA QUANDO USAR O CARROSSEL COMO RELACIONADOS --- */
+.relatedWrapper {
+  margin-top: 60px;
+  padding-top: 40px;
+  border-top: 1px solid #eee;
+}
+
+.relatedTitle {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #1a2a40;
+  margin-bottom: 20px;
+  padding: 0 24px;
+}

@@ -1,0 +1,96 @@
+.container {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 25px; /* Ajustado para melhor respiro nas bordas */
+  line-height: 1.8;
+  color: #333;
+  font-family: 'Inter', sans-serif; /* Sugestão de fonte mais moderna */
+}
+
+.title {
+  color: #1a2a40;
+  border-bottom: 2px solid #d4af37;
+  padding-bottom: 12px;
+  margin-bottom: 40px;
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.section {
+  margin-bottom: 40px;
+}
+
+.section h2 {
+  color: #1a2a40;
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.alert {
+  background-color: #fcf8e3;
+  padding: 20px;
+  border-left: 5px solid #d4af37;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  margin-top: 20px;
+  color: #856404; /* Cor de texto mais legível para alertas */
+}
+
+.verse {
+  margin-top: 60px;
+  text-align: center;
+  color: #777;
+  font-style: italic;
+  border-top: 1px solid #eee;
+  padding-top: 30px;
+  font-size: 1rem;
+}
+
+/* ===== 📱 RESPONSIVIDADE ===== */
+
+@media (max-width: 768px) {
+  .container {
+    margin: 40px auto;
+    padding: 0 20px;
+    line-height: 1.6; /* Texto um pouco mais compacto no celular */
+  }
+
+  .title {
+    font-size: 1.8rem;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .section h2 {
+    font-size: 1.2rem;
+    text-align: left;
+  }
+
+  .alert {
+    padding: 15px;
+    font-size: 0.9rem;
+    border-left-width: 4px; /* Seta um pouco mais fina no mobile */
+  }
+
+  .verse {
+    margin-top: 40px;
+    font-size: 0.95rem;
+    padding: 20px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .section h2 {
+    font-size: 1.1rem;
+  }
+
+  /* Melhora a leitura do parágrafo no celular pequeno */
+  p {
+    margin-bottom: 15px;
+  }
+}

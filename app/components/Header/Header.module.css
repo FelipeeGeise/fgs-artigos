@@ -1,0 +1,259 @@
+.header {
+  background-color: #1a2a40;
+  color: #ffffff;
+  padding: 12px 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* --- LOGO --- */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.logo span {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #d4af37;
+  letter-spacing: -0.5px;
+}
+
+.logoImg {
+  border-radius: 8px;
+  transition: transform 0.3s ease;
+}
+
+/* --- BUSCA DINÂMICA --- */
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 10px;
+  border-radius: 50px;
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.searchOpen {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(212, 175, 55, 0.4);
+  padding-left: 15px;
+}
+
+.searchInput {
+  width: 0;
+  opacity: 0;
+  border: none;
+  background: transparent;
+  color: white;
+  outline: none;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.searchOpen .searchInput {
+  width: 180px;
+  opacity: 1;
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* --- NAVEGAÇÃO --- */
+.nav {
+  display: flex;
+  gap: 25px;
+}
+
+.nav a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -5px;
+  left: 0;
+  background-color: #d4af37;
+  transition: width 0.3s ease;
+}
+
+.nav a:hover { color: #d4af37; }
+.nav a:hover::after { width: 100%; }
+
+/* --- AÇÕES E ÍCONES --- */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.icon {
+  cursor: pointer;
+  color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.icon:hover {
+  color: #d4af37;
+  transform: translateY(-2px);
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* --- NOVO: ÁREA DO USUÁRIO (BONEQUINHO) --- */
+.userContainer {
+  position: relative;
+}
+
+.userDropdown {
+  position: absolute;
+  top: 150%;
+  right: 0;
+  background-color: #ffffff;
+  min-width: 220px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  padding: 12px 0;
+  z-index: 1100;
+  animation: slideDown 0.25s ease-out;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.userGreeting {
+  padding: 8px 16px;
+  color: #1a2a40;
+  font-weight: 700;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.divider {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 8px 0;
+}
+
+.userLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  color: #444 !important; /* Força cor escura no fundo branco */
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.userLink:hover {
+  background-color: #f8f9fa;
+  color: #d4af37 !important;
+}
+
+/* --- CARRINHO --- */
+.cart {
+  position: relative;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -10px;
+  background-color: #d4af37;
+  color: #1a2a40;
+  font-size: 0.7rem;
+  font-weight: 800;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 4px;
+  border: 2px solid #1a2a40;
+}
+
+/* --- MOBILE --- */
+.menuButton {
+  display: none;
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .menuButton { display: block; order: -1; }
+  .logo span { font-size: 1.1rem; }
+  .nav {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 280px;
+    height: 100vh;
+    background-color: #1a2a40;
+    flex-direction: column;
+    padding: 100px 30px;
+    gap: 25px;
+    transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1001;
+    box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+  }
+  .navOpen { left: 0; }
+  .searchOpen .searchInput { width: 110px; }
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+  }
+
+  /* Ajuste do dropdown no mobile para não cortar */
+  .userDropdown {
+    right: -50px; 
+    min-width: 200px;
+  }
+}

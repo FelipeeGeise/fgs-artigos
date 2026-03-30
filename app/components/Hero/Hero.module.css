@@ -1,0 +1,130 @@
+.hero {
+  position: relative;
+  width: 100%;
+
+  /* 🔥 CORREÇÃO DO BUG NO MOBILE */
+  min-height: 100vh;   /* fallback */
+  min-height: 100svh;  /* viewport correto no celular */
+
+  display: flex;
+  align-items: center;
+
+  /* 🔥 IMAGEM DE FUNDO MANTIDA */
+  background-image: url("/imagens/fgs.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+
+  overflow: hidden;
+}
+
+/* 🔥 OVERLAY ESCURO PREMIUM */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.4),
+    rgba(0, 0, 0, 0.55)
+  );
+
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: bold;
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.highlight {
+  color: #facc15;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  margin-bottom: 28px;
+  color: #e5e7eb;
+  max-width: 500px;
+}
+
+.button {
+  background: #facc15;
+  color: #000;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button:hover {
+  background: #eab308;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(250, 204, 21, 0.4);
+}
+
+/* ===== RESPONSIVIDADE COMPLETA ===== */
+
+/* Tablet */
+@media (min-width: 768px) {
+  .title {
+    font-size: 2.8rem;
+  }
+  .subtitle {
+    font-size: 1.2rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 100vh;
+    min-height: 100svh; /* mantém correção também no desktop moderno */
+  }
+
+  .container {
+    justify-content: center;
+  }
+
+  .title {
+    font-size: 3rem;
+  }
+
+  .subtitle {
+    font-size: 1.25rem;
+  }
+
+  .button {
+    padding: 16px 32px;
+  }
+}
+
+/* Celulares pequenos */
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .button {
+    width: 100%;
+    text-align: center;
+  }
+}

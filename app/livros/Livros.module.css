@@ -1,0 +1,194 @@
+/* 1. Layout Base */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 20px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.headerSection { text-align: center; margin-bottom: 40px; }
+.title { font-size: 2.5rem; font-weight: 800; color: #111; margin-bottom: 10px; }
+.subtitle { color: #666; font-size: 1.1rem; }
+
+/* 2. Carrossel e Grid */
+.carouselWrapper { 
+  position: relative; 
+  display: flex; 
+  align-items: center; 
+  width: 100%;
+}
+
+.grid {
+  display: flex;
+  gap: 25px;
+  overflow-x: auto;
+  padding: 20px 5px 40px;
+  scroll-behavior: smooth;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  width: 100%;
+}
+
+.grid::-webkit-scrollbar { display: none; } /* Chrome/Safari */
+
+/* 3. Navegação (Setas) */
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background: #ffffff;
+  border: 1px solid #eee;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.navButton:hover { 
+  background: #facc15; 
+  color: #111; 
+  border-color: #facc15; 
+  transform: translateY(-50%) scale(1.1);
+}
+
+.prev { left: -24px; }
+.next { right: -24px; }
+
+/* 4. Card de Produto */
+.card {
+  flex: 0 0 280px;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #efefef;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.card:hover { 
+  transform: translateY(-8px); 
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1); 
+}
+
+/* 5. Imagem (A Solução para Descentralização) */
+.imageLink { 
+  position: relative; 
+  display: flex; 
+  align-items: center;
+  justify-content: center;
+  background: #fdfdfd; /* Fundo leve para capas claras */
+  height: 320px; 
+  width: 100%;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+.productImage { 
+  max-width: 100%; 
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain; /* Mantém proporção sem cortar */
+  padding: 24px; /* Respiro para a capa do livro */
+  transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+}
+
+.imageLink:hover .productImage { transform: scale(1.08); }
+
+/* Overlay "Ver Detalhes" */
+.overlay {
+  position: absolute;
+  bottom: -50px;
+  left: 0;
+  width: 100%;
+  background: rgba(250, 204, 21, 0.95);
+  color: #111;
+  padding: 12px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: bottom 0.3s ease;
+}
+
+.imageLink:hover .overlay { bottom: 0; }
+
+/* 6. Informações e Tipografia (Com Line-Clamp) */
+.info { 
+  padding: 20px; 
+  flex: 1; 
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; /* Mantém o botão sempre embaixo */
+}
+
+.name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 8px;
+  line-height: 1.4;
+  height: 2.8em; /* Altura de exatamente 2 linhas */
+  
+  /* Line Clamp para compatibilidade 2026 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.price { 
+  font-size: 1.4rem; 
+  font-weight: 800; 
+  color: #111; 
+  margin: 8px 0 16px; 
+}
+
+/* 7. Botões */
+.button {
+  width: 100%;
+  padding: 14px; 
+  border-radius: 12px; 
+  border: none;
+  font-weight: 700; 
+  font-size: 0.95rem;
+  cursor: pointer; 
+  transition: all 0.2s ease;
+}
+
+.activeButton { background: #111; color: #fff; }
+.activeButton:hover { background: #facc15; color: #111; }
+
+.disabledButton { 
+  background: #f3f4f6; 
+  color: #9ca3af; 
+  cursor: not-allowed; 
+}
+
+/* 📱 Responsividade Mobile */
+@media (max-width: 768px) {
+  .container { padding: 40px 15px; }
+  .grid { 
+    gap: 15px; 
+    padding-bottom: 20px;
+    scroll-snap-type: x mandatory;
+  }
+  .card { 
+    flex: 0 0 85%; /* Deixa o próximo card visível para sugerir scroll */
+    scroll-snap-align: center;
+  }
+  .navButton { display: none; } /* Mobile foca no gesto de deslizar */
+  .imageLink { height: 280px; }
+}
