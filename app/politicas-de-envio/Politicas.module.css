@@ -89,8 +89,7 @@
     font-size: 1.1rem;
   }
 
-  /* Melhora a leitura do parágrafo no celular pequeno */
-  p {
-    margin-bottom: 15px;
+  .container p { 
+    margin-bottom: 15px; 
   }
 }
