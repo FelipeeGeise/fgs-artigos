@@ -1,11 +1,11 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react"; // ✅ Adicionado Suspense
 import Link from "next/link";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
-import styles from "../livros/Livros.module.css"; // Reaproveitando seu CSS profissional
+import styles from "../livros/Livros.module.css"; 
 import { useCart, CartProvider } from "../context/CartContext";
 
 interface ApiProduct {
@@ -27,7 +27,6 @@ function DevocionaisContent() {
       try {
         const res = await fetch("/api/products");
         const data = await res.json();
-        // Garante que pegamos apenas os produtos da categoria correta
         setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
         console.error("Erro ao carregar devocionais:", error);
@@ -63,7 +62,6 @@ function DevocionaisContent() {
           <p className={styles.empty}>Nenhum devocional cadastrado no momento.</p>
         ) : (
           <div className={styles.carouselWrapper}>
-            {/* Setas de Navegação (Aparecem no Desktop) */}
             <button className={`${styles.navButton} ${styles.prev}`} onClick={() => scroll("left")}>
               &#10094;
             </button>
@@ -77,7 +75,6 @@ function DevocionaisContent() {
 
                 return (
                   <div key={product.id} className={styles.card}>
-                    {/* ✅ Imagem Clicável para Detalhes */}
                     <Link href={`/product/${product.id}`} className={styles.imageLink}>
                       <img 
                         src={product.image} 
@@ -115,11 +112,13 @@ function DevocionaisContent() {
   );
 }
 
-// Exportação final com o Provider do Carrinho
+// ✅ Exportação atualizada com Suspense para resolver o erro de Build
 export default function DevocionaisPage() {
   return (
-    <CartProvider>
-      <DevocionaisContent />
-    </CartProvider>
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '50px' }}>Carregando devocionais...</div>}>
+      <CartProvider>
+        <DevocionaisContent />
+      </CartProvider>
+    </Suspense>
   );
 }

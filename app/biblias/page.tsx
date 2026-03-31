@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
-import { useEffect, useState } from "react";
-import Link from "next/link"; // ✅ Importante para o clique na imagem
+import { useEffect, useState, Suspense } from "react"; // ✅ Adicionado Suspense
+import Link from "next/link"; 
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 import styles from "./Biblias.module.css";
@@ -51,7 +51,6 @@ function BibliasContent() {
             {biblias.map(product => (
               <div key={product.id} className={styles.card}>
                 
-                {/* ✅ AGORA A IMAGEM É UM LINK: Redireciona para product/[id] */}
                 <Link href={`/product/${product.id}`} className={styles.imageLink}>
                   <img 
                     src={product.image} 
@@ -62,7 +61,6 @@ function BibliasContent() {
                 </Link>
 
                 <div className={styles.productInfo}>
-                  {/* ✅ NOME TAMBÉM É UM LINK */}
                   <Link href={`/product/${product.id}`}>
                     <h3 className={styles.productName}>{product.name}</h3>
                   </Link>
@@ -96,10 +94,13 @@ function BibliasContent() {
   );
 }
 
+// ✅ Exportação atualizada com Suspense para evitar erro de Prerender
 export default function BibliasPage() {
   return (
-    <CartProvider>
-      <BibliasContent />
-    </CartProvider>
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '50px' }}>Carregando Bíblias...</div>}>
+      <CartProvider>
+        <BibliasContent />
+      </CartProvider>
+    </Suspense>
   );
 }

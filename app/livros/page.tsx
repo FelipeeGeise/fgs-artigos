@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Suspense } from "react"; // ✅ Adicionado Suspense
 import Link from "next/link";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
@@ -60,7 +60,6 @@ function LivrosContent() {
           <div className={styles.loader}>Buscando obras...</div>
         ) : (
           <div className={styles.carouselWrapper}>
-            {/* Setas de Navegação */}
             <button className={`${styles.navButton} ${styles.prev}`} onClick={() => scroll("left")}>&#10094;</button>
             <button className={`${styles.navButton} ${styles.next}`} onClick={() => scroll("right")}>&#10095;</button>
 
@@ -70,7 +69,6 @@ function LivrosContent() {
 
                 return (
                   <div key={product.id} className={styles.card}>
-                    {/* ✅ Imagem Clicável */}
                     <Link href={`/product/${product.id}`} className={styles.imageLink}>
                       <img src={product.image} alt={product.name} className={styles.productImage} />
                       <div className={styles.overlay}>Ver Detalhes</div>
@@ -104,10 +102,13 @@ function LivrosContent() {
   );
 }
 
+// ✅ Exportação atualizada com Suspense para resolver o erro de Prerender
 export default function LivrosPage() {
   return (
-    <CartProvider>
-      <LivrosContent />
-    </CartProvider>
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '50px' }}>Carregando livros...</div>}>
+      <CartProvider>
+        <LivrosContent />
+      </CartProvider>
+    </Suspense>
   );
 }

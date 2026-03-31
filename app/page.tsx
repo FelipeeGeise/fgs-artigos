@@ -1,28 +1,28 @@
-"use client"; // Necessário porque o Provider e os componentes usam estados
+/* eslint-disable react/no-unescaped-entities */
+"use client"; 
 
+import { Suspense } from "react"; // ✅ Adicionado Suspense
 import Header from "./components/Header/Header";
 import Hero from "./components/Hero/Hero";
 import Products from "./components/Products/Products";
 import Footer from "./components/Footer/Footer";
-// ✅ Importe o seu Contexto (ajuste o caminho se a pasta 'context' estiver em outro lugar)
 import { CartProvider } from "./context/CartContext"; 
 
 export default function Home() {
   return (
-    <CartProvider>
-      <div>
-        {/* Agora o Header consegue ler o cart.length sem dar erro 500 */}
-        <Header />
-        
-        <main>
-          <Hero />
+    <Suspense fallback={<div style={{ textAlign: 'center', padding: '100px' }}>Carregando FG's Store...</div>}>
+      <CartProvider>
+        <div>
+          <Header />
           
-          {/* O Products vai carregar os itens do seu Admin/API */}
-          <Products />
-        </main>
+          <main>
+            <Hero />
+            <Products />
+          </main>
 
-        <Footer />
-      </div>
-    </CartProvider>
+          <Footer />
+        </div>
+      </CartProvider>
+    </Suspense>
   );
 }
