@@ -3,48 +3,56 @@ import { prisma } from "@/lib/prisma";
 
 export async function POST(request: Request) {
   try {
+    // 1. Tenta ler o corpo da requisição
     const body = await request.json();
     
-    // O Mercado Pago envia o ID do pagamento na notificação
-    // Pode vir como body.data.id ou body.id dependendo da versão da API
+    // O Mercado Pago envia o ID de formas diferentes conforme a versão da API
     const paymentId = body.data?.id || body.id;
+    const action = body.action || body.type; 
 
-    if (paymentId) {
-      // 1. Consultar o status real no Mercado Pago (Segurança contra fakes)
+    console.log(`--- WEBHOOK MP: Ação ${action} | ID: ${paymentId} ---`);
+
+    // 2. Só processamos se houver um ID de pagamento
+    if (paymentId && (action === "payment" || action === "payment.created" || action === "payment.updated")) {
+      
+      const mpToken = (process.env.MP_ACCESS_TOKEN || "").trim();
+      
+      // 3. Consulta o status real no Mercado Pago por segurança
       const response = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        method: 'GET',
         headers: {
-          Authorization: `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+          Authorization: `Bearer ${mpToken}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error("Falha ao consultar Mercado Pago");
+        console.error(`🚨 Erro na API do MP ao consultar ID: ${paymentId}`);
+        return new NextResponse("Erro na consulta", { status: 200 });
       }
 
       const paymentData = await response.json();
 
-      // 2. Se o pagamento estiver aprovado
+      // 4. Se o pagamento estiver aprovado, atualiza o banco
       if (paymentData.status === "approved") {
-        // ✅ SOLUÇÃO PARA O ERRO DE TYPESCRIPT:
-        // Como o paymentId não é @unique no seu schema, usamos updateMany
         await prisma.order.updateMany({
           where: {
             paymentId: String(paymentId),
+            NOT: { status: "PAGO" } // Evita processar o que já está pago
           },
           data: {
             status: "PAGO",
           },
         });
         
-        console.log(`✅ Status do pagamento ${paymentId} atualizado para PAGO.`);
+        console.log(`✅ Pedido ${paymentId} atualizado para PAGO no banco.`);
       }
     }
 
-    // Mercado Pago precisa receber status 200 para confirmar o recebimento
+    // Retornamos 200 para o Mercado Pago parar de enviar a mesma notificação
     return new NextResponse("OK", { status: 200 });
+
   } catch (error) {
-    console.error("❌ Erro no Webhook:", error);
-    // Retornamos 200 mesmo no erro para evitar que o MP fique reenviando infinitamente
-    return new NextResponse("Erro Processado", { status: 200 });
+    console.error("❌ Erro no processamento do Webhook:", error);
+    return new NextResponse("Erro interno", { status: 200 });
   }
 }

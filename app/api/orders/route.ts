@@ -1,26 +1,29 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { MercadoPagoConfig, Payment } from 'mercadopago';
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// ✅ Interface ajustada para bater com o seu formulário de checkout
+// 1. Configuração do Cliente Mercado Pago
+const client = new MercadoPagoConfig({ 
+  accessToken: process.env.MP_ACCESS_TOKEN || '' 
+});
+
 interface OrderRequestBody {
   customerName: string;
   cpf: string;
   whatsapp: string;
   email: string;
-  // Endereço detalhado conforme seu Schema
   cep: string;
   logradouro: string;
   numero: string;
   bairro: string;
   cidade: string;
   uf: string;
-  // Financeiro
   total: number; 
   items: {
-    id: string; // productId
+    id: string; 
     name: string;
     price: number;
     quantity: number;
@@ -28,7 +31,7 @@ interface OrderRequestBody {
 }
 
 /**
- * [POST] - CRIAR PEDIDO
+ * [POST] - CRIAR PEDIDO E GERAR PIX
  */
 export async function POST(req: Request) {
   try {
@@ -38,7 +41,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Carrinho vazio" }, { status: 400 });
     }
 
-    // Criando o pedido exatamente com os nomes do seu Schema.prisma
+    // A. SALVAR NO BANCO DE DADOS (PRISMA/SUPABASE)
     const order = await prisma.order.create({
       data: {
         customerName: body.customerName,
@@ -65,16 +68,46 @@ export async function POST(req: Request) {
       include: { items: true },
     });
 
-    return NextResponse.json(order);
+    // B. GERAR O PAGAMENTO NO MERCADO PAGO
+    const payment = new Payment(client);
+
+    const paymentResponse = await payment.create({
+      body: {
+        transaction_amount: Number(body.total),
+        description: `Pedido #${order.id} - FGS Artigos`,
+        payment_method_id: 'pix',
+        payer: {
+          email: body.email,
+          first_name: body.customerName.split(' ')[0],
+          identification: {
+            type: 'CPF',
+            number: body.cpf.replace(/\D/g, ''), 
+          },
+        },
+        date_of_expiration: new Date(Date.now() + 30 * 60000).toISOString(), 
+      },
+    });
+
+    // C. RESPOSTA DE SUCESSO PARA O FRONT-END
+    return NextResponse.json({
+      orderId: order.id,
+      pix: {
+        copy_paste: paymentResponse.point_of_interaction?.transaction_data?.qr_code,
+        qrcode_base64: paymentResponse.point_of_interaction?.transaction_data?.qr_code_base64,
+      }
+    });
+
   } catch (error: unknown) {
-    const message = error instanceof Error ? error.message : "Erro desconhecido";
-    console.error("❌ Erro Prisma:", message);
-    return NextResponse.json({ error: "Erro ao salvar pedido no banco" }, { status: 500 });
+    if (error instanceof Error) {
+      console.error("❌ Erro no Processamento:", error.message);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 });
   }
 }
 
 /**
- * [GET] - LISTAR PEDIDOS (ADMIN)
+ * [GET] - LISTAR PEDIDOS
  */
 export async function GET() {
   try {
@@ -83,7 +116,8 @@ export async function GET() {
       orderBy: { createdAt: "desc" },
     });
     return NextResponse.json(orders);
-  } catch {
+  } catch (error: unknown) {
+    console.error("❌ Erro ao buscar pedidos:", error);
     return NextResponse.json({ error: "Erro ao buscar pedidos" }, { status: 500 });
   }
 }
@@ -100,7 +134,8 @@ export async function DELETE(req: Request) {
 
     await prisma.order.delete({ where: { id } });
     return NextResponse.json({ message: "Pedido excluído" });
-  } catch {
+  } catch (error: unknown) {
+    console.error("❌ Erro ao excluir pedido:", error);
     return NextResponse.json({ error: "Erro ao excluir" }, { status: 500 });
   }
 }
