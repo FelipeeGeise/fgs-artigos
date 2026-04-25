@@ -8,8 +8,8 @@ interface Product {
   id: string;
   name: string;
   price: number;
-  costPrice: number;    // Preço de custo no fornecedor
-  supplierUrl: string;  // Link do produto na Shopee/AliExpress
+  costPrice: number;
+  supplierUrl: string;
   image: string;
   category: string;
 }
@@ -20,9 +20,9 @@ export default function AdminProductsPage() {
   const [form, setForm] = useState({ 
     name: "", 
     price: "", 
-    costPrice: "",      // Novo campo no form
-    supplierUrl: "",    // Novo campo no form
-    image: "/imagens/products/", 
+    costPrice: "",      
+    supplierUrl: "",    
+    image: "", // 🔥 agora começa vazio
     category: "biblias" 
   });
 
@@ -48,6 +48,12 @@ export default function AdminProductsPage() {
   // 2. Salvar Novo Produto (POST)
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+
+    if (!form.image) {
+      alert("Selecione uma imagem!");
+      return;
+    }
+
     try {
       const res = await fetch("/api/products", {
         method: "POST",
@@ -62,8 +68,12 @@ export default function AdminProductsPage() {
       if (res.ok) {
         alert("✅ Artigo cadastrado com sucesso!");
         setForm({ 
-          name: "", price: "", costPrice: "", 
-          supplierUrl: "", image: "/imagens/products/", category: "biblias" 
+          name: "", 
+          price: "", 
+          costPrice: "", 
+          supplierUrl: "", 
+          image: "", 
+          category: "biblias" 
         });
         loadProducts();
       } else {
@@ -95,6 +105,7 @@ export default function AdminProductsPage() {
       <div className={styles.formCard}>
         <h2 className={styles.subtitle}>Novo Cadastro</h2>
         <form onSubmit={handleSubmit} className={styles.formGroup}>
+          
           <label className={styles.label}>Nome do Produto</label>
           <input 
             className={styles.input}
@@ -115,6 +126,7 @@ export default function AdminProductsPage() {
                 required 
               />
             </div>
+
             <div style={{ flex: 1 }}>
               <label className={styles.label}>Preço de Custo (Fornecedor)</label>
               <input 
@@ -149,13 +161,26 @@ export default function AdminProductsPage() {
                 <option value="devocionais">Devocionais</option>
               </select>
             </div>
+
             <div style={{ flex: 1 }}>
-              <label className={styles.label}>Caminho da Imagem</label>
+              <label className={styles.label}>Imagem do Produto</label>
+
+              {/* 🔥 INPUT NOVO (UPLOAD REAL) */}
               <input 
+                type="file"
+                accept="image/*"
                 className={styles.input}
-                value={form.image} 
-                onChange={e => setForm({...form, image: e.target.value})} 
-                required 
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (!file) return;
+
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setForm({ ...form, image: reader.result as string });
+                  };
+                  reader.readAsDataURL(file);
+                }}
+                required
               />
             </div>
           </div>

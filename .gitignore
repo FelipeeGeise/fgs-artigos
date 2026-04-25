@@ -1,46 +1,75 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# dependencies
-/node_modules
-/.pnp
+# =========================
+# DEPENDENCIES
+# =========================
+node_modules/
+.pnp/
 .pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
 
-# testing
-/coverage
+# =========================
+# NEXT.JS
+# =========================
+.next/
+out/
+dist/
+build/
 
-# next.js
-/.next/
-/out/
+# Cache do Next/Turbopack
+.turbo/
+.cache/
 
-# production
-/build
+# =========================
+# ENV FILES (SEGREDOS)
+# =========================
+.env
+.env.*
+!.env.example
 
-# misc
-.DS_Store
-*.pem
+# local only (Next padrão)
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# debug
+# =========================
+# LOGS
+# =========================
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
+pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
+# =========================
+# PRISMA
+# =========================
+node_modules/.prisma/
+prisma/dev.db
+prisma/dev.db-journal
 
-# vercel
-.vercel
-
-# typescript
+# =========================
+# TYPESCRIPT
+# =========================
 *.tsbuildinfo
 next-env.d.ts
 
-/app/generated/prisma
+# =========================
+# OS FILES
+# =========================
+.DS_Store
+Thumbs.db
 
-.vercel
-.env*.local
+# =========================
+# IDEs
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# VERCEL
+# =========================
+.vercel/
+
+# =========================
+# OPTIONAL: Prisma generate cache
+# =========================
+/app/generated/prisma

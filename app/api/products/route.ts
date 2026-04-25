@@ -4,46 +4,72 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+// Tipagem para o corpo da requisição
+interface ProductInput {
+  name: string;
+  category: string;
+  image: string;
+  price: string | number;
+  costPrice?: string | number;
+  supplierUrl?: string;
+  sku?: string;
+}
+
 /**
- * [GET] - LISTAR PRODUTOS (VITRINE & ADMIN)
+ * [GET] - LISTAR PRODUTOS
  */
 export async function GET() {
   try {
     const products = await prisma.product.findMany({
       orderBy: { createdAt: "desc" },
     });
-    // ✅ Retorna o array de produtos (mesmo que vazio [])
     return NextResponse.json(products);
-  } catch {
-    // ✅ Removido o (error) para evitar o aviso do TS
+  } catch (error) {
+    console.error("Erro ao carregar catálogo:", error);
     return NextResponse.json({ error: "Erro ao carregar catálogo" }, { status: 500 });
   }
 }
 
 /**
- * [POST] - CADASTRAR PRODUTO (DROPSHIPPING)
+ * [POST] - CADASTRAR PRODUTO
  */
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
+    const body: ProductInput = await req.json();
 
-    // ✅ Sincronizado com o novo Schema: Removido 'stock', adicionado 'costPrice' e 'supplierUrl'
+    // 1. Tratamento de Preços (converte vírgula para ponto e garante que seja número)
+    const formattedPrice = typeof body.price === "string" 
+      ? parseFloat(body.price.replace(",", ".")) 
+      : Number(body.price);
+
+    const formattedCostPrice = typeof body.costPrice === "string"
+      ? parseFloat(body.costPrice.replace(",", "."))
+      : Number(body.costPrice || 0);
+
+    // 2. Geração de SKU (Obrigatório pelo seu Schema)
+    // Se não vier no body, cria um baseado no timestamp
+    const generatedSku = body.sku || `PRD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
     const product = await prisma.product.create({
       data: {
         name: body.name,
         category: body.category,
         image: body.image,
-        // Conversão segura de preços
-        price: parseFloat(body.price.toString().replace(",", ".")),
-        costPrice: parseFloat(body.costPrice?.toString().replace(",", ".") || "0"),
+        sku: generatedSku, // ✅ Resolve o erro de propriedade ausente
+        price: formattedPrice,
+        costPrice: formattedCostPrice,
         supplierUrl: body.supplierUrl || "",
-        active: true, // Garante que o produto nasce visível
+        active: true,
       },
     });
 
     return NextResponse.json(product);
-  } catch {
-    return NextResponse.json({ error: "Erro ao salvar no banco. Verifique os campos." }, { status: 500 });
+  } catch (error) {
+    console.error("Erro ao salvar produto:", error);
+    return NextResponse.json(
+      { error: "Erro ao salvar no banco. Verifique os campos obrigatórios." }, 
+      { status: 500 }
+    );
   }
 }
 
@@ -63,8 +89,9 @@ export async function DELETE(req: Request) {
       where: { id: id },
     });
 
-    return NextResponse.json({ message: "Removido!" });
-  } catch {
+    return NextResponse.json({ message: "Removido com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao excluir produto:", error);
     return NextResponse.json({ error: "Erro ao excluir" }, { status: 500 });
   }
 }

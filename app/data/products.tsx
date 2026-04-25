@@ -2,9 +2,9 @@
 export const products = [
   {
     id: 1,
-    name: "Bíblia de Estudo",
+    name: "Biblia da Mulher",
     price: 139.90,
-    image: "/imagens/products/bibliaum.jpg",
+    image: "/imagens/products/biblia-da-mulher.png",
     category: "biblias",
     description: "Uma bíblia completa para estudos profundos com notas explicativas."
   },

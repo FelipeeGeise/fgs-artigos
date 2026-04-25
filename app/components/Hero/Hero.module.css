@@ -1,130 +1,159 @@
+/* ============================================================
+   ESTILO HERO COMPLETO - DESIGN LIVRARIA PREMIUM
+   BANNER: VIVA COM PROPÓSITO
+   ============================================================
+*/
+
+:root {
+  --primary-deep: #0B4D42;
+  --accent-gold: #C5A059;
+  --white: #FFFFFF;
+  --dark-button: #1E1E1E; /* Cinza muito escuro da imagem */
+}
+
 .hero {
   position: relative;
   width: 100%;
-
-  /* 🔥 CORREÇÃO DO BUG NO MOBILE */
-  min-height: 100vh;   /* fallback */
-  min-height: 100svh;  /* viewport correto no celular */
-
+  min-height: 200px; 
   display: flex;
   align-items: center;
-
-  /* 🔥 IMAGEM DE FUNDO MANTIDA */
-  background-image: url("/imagens/fgs.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  color: white;
-
-  overflow: hidden;
-}
-
-/* 🔥 OVERLAY ESCURO PREMIUM */
-.hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-
-  background: linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0.4),
-    rgba(0, 0, 0, 0.55)
-  );
-
-  z-index: 1;
+  justify-content: center;
+  background-color: #e9a60a; /* Creme externo */
 }
 
 .container {
   position: relative;
-  z-index: 2;
-  max-width: 1120px;
+  width: 100%;
+  max-width: 1100px;
+  min-height: 420px;
   margin: 0 auto;
-  padding: 0 24px;
+  
+  /* BANNER (IMAGEM QUE GERAMOS SEM OS TEXTOS) */
+  background-image: url("/imagens/banner-viva-proposito.png"); 
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+  
+  display: flex;
+  align-items: center; /* Centraliza o bloco de texto verticalmente */
+  padding: 0 80px; /* Recuo lateral para o texto não colar na borda */
+}
 
+/* --- BLOCO DE CONTEÚDO (TEXTOS E BOTÃO EMPILHADOS) --- */
+.content {
+  position: relative;
+  z-index: 2;
+  max-width: 480px; 
+  
+  /* Garante que fiquem um abaixo do outro perfeitamente */
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-start; /* Alinhamento à esquerda como na foto */
+}
+
+.author {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--accent-gold);
+  margin-bottom: 5px; /* Colado no título */
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
 }
 
 .title {
-  font-size: 2.2rem;
-  font-weight: bold;
-  margin-bottom: 16px;
-  line-height: 1.2;
-}
-
-.highlight {
-  color: #facc15;
+  font-size: 4rem; /* Título bem grande e impactante */
+  font-weight: 900;
+  color: var(--white);
+  line-height: 0.9; /* Letras bem próximas verticalmente */
+  margin-bottom: 20px; /* Respiro para o subtítulo */
+  text-transform: uppercase;
+  letter-spacing: -2px;
 }
 
 .subtitle {
-  font-size: 1.1rem;
-  margin-bottom: 28px;
-  color: #e5e7eb;
-  max-width: 500px;
+  font-size: 1.35rem;
+  color: var(--white);
+  margin-bottom: 35px; /* Espaço generoso antes do botão */
+  max-width: 400px;
+  line-height: 1.2;
+  font-weight: 400;
+  opacity: 0.95;
 }
 
+/* --- BOTÃO (IDÊNTICO À IMAGEM) --- */
 .button {
-  background: #facc15;
-  color: #000;
-  padding: 14px 28px;
-  border-radius: 10px;
-  font-weight: 600;
+  background-color: var(--dark-button); /* Fundo quase preto */
+  color: var(--accent-gold); /* Texto em dourado */
+  padding: 16px 45px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  
+  /* Garante que o botão fique abaixo de tudo */
+  display: inline-block;
 }
 
 .button:hover {
-  background: #eab308;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(250, 204, 21, 0.4);
+  background-color: #000000;
+  color: var(--white); /* Troca para branco no hover para dar feedback */
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
+/* --- SETAS LATERAIS DA IMAGEM --- */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 2.8rem;
+  cursor: pointer;
+  padding: 15px;
+  transition: color 0.3s ease;
+  z-index: 3;
+}
+
+.arrowLeft { left: 15px; }
+.arrowRight { right: 15px; }
+
+.arrow:hover {
+  color: var(--white);
 }
 
 /* ===== RESPONSIVIDADE COMPLETA ===== */
 
-/* Tablet */
-@media (min-width: 768px) {
-  .title {
-    font-size: 2.8rem;
-  }
-  .subtitle {
-    font-size: 1.2rem;
-  }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-  .hero {
-    min-height: 100vh;
-    min-height: 100svh; /* mantém correção também no desktop moderno */
-  }
-
+@media (max-width: 768px) {
   .container {
-    justify-content: center;
+    min-height: 350px;
+    padding: 40px 25px;
+    justify-content: center; /* Centraliza no mobile */
+    background-position: 35%; /* Move a imagem para o livro aparecer */
   }
-
-  .title {
-    font-size: 3rem;
-  }
-
-  .subtitle {
-    font-size: 1.25rem;
-  }
-
-  .button {
-    padding: 16px 32px;
-  }
-}
-
-/* Celulares pequenos */
-@media (max-width: 480px) {
-  .title {
-    font-size: 1.8rem;
-  }
-
-  .button {
-    width: 100%;
+  
+  .content {
+    align-items: center; /* Centraliza os textos */
     text-align: center;
+  }
+  
+  .title {
+    font-size: 2.6rem;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+  }
+  
+  .arrow {
+    display: none; /* Limpa o visual no celular */
   }
 }

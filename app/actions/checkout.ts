@@ -3,7 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 
-// --- INTERFACES DE TIPAGEM ---
+// --- INTERFACES ---
 export interface OrderCustomerInput {
   nome: string;
   cpf: string;
@@ -29,42 +29,50 @@ interface MercadoPagoErrorResponse {
   cause?: Array<{ description: string }>;
 }
 
-/**
- * ACTION: Criar Pedido no Prisma e Gerar PIX no Mercado Pago
- */
 export async function createOrderAction(
-  customerData: OrderCustomerInput, 
-  cartItems: OrderItemInput[], 
+  customerData: OrderCustomerInput,
+  cartItems: OrderItemInput[],
   total: number
 ) {
-  // 1️⃣ CAPTURA E LIMPEZA DO NOVO TOKEN (TEST-)
   const mpToken = (process.env.MP_ACCESS_TOKEN || "").trim();
 
-  console.log("--- INICIANDO PROCESSAMENTO DE PEDIDO (MODO TESTE) ---");
-  console.log("Token lido:", mpToken.substring(0, 20) + "..."); 
-
-  if (!mpToken || mpToken.length < 20) {
-    return { 
-      success: false, 
-      error: "O servidor não encontrou o Token de Teste no .env.local" 
+  if (!mpToken) {
+    return {
+      success: false,
+      error: "Token do Mercado Pago não configurado.",
     };
   }
 
   try {
-    // 2️⃣ INICIALIZAÇÃO DO MERCADO PAGO
     const client = new MercadoPagoConfig({ accessToken: mpToken });
     const payment = new Payment(client);
-    
-    // 3️⃣ TRATAMENTO DE DADOS
+
     const cleanCPF = customerData.cpf.replace(/\D/g, "");
     const cleanPhone = customerData.whatsapp.replace(/\D/g, "");
     const firstName = customerData.nome.split(" ")[0] || "Cliente";
 
-    // 4️⃣ SOLICITAR PAGAMENTO (PIX)
+    // 🔥 BUSCA PRODUTOS NO BANCO PARA PEGAR SKU REAL
+    const itemsWithSku = await Promise.all(
+      cartItems.map(async (item) => {
+        const product = await prisma.product.findUnique({
+          where: { id: String(item.id) },
+        });
+
+        return {
+          productId: String(item.id),
+          sku: product?.sku || "SEM-SKU",
+          name: item.name,
+          price: Number(item.price),
+          quantity: Number(item.quantity || 1),
+        };
+      })
+    );
+
+    // 💳 CRIAR PIX NO MERCADO PAGO
     const paymentResponse = await payment.create({
       body: {
-        transaction_amount: Number(total.toFixed(2)), 
-        description: `Pedido FG'S Store - Teste PIX`,
+        transaction_amount: Number(total.toFixed(2)),
+        description: `Pedido FG'S Store - PIX`,
         payment_method_id: "pix",
         installments: 1,
         payer: {
@@ -78,56 +86,52 @@ export async function createOrderAction(
       },
     });
 
-    const pixData = paymentResponse.point_of_interaction?.transaction_data;
+    const pixData =
+      paymentResponse.point_of_interaction?.transaction_data;
 
     if (!pixData) {
-      throw new Error("O Mercado Pago não retornou os dados do PIX.");
+      throw new Error("PIX não retornado pelo Mercado Pago.");
     }
 
-    // 5️⃣ SALVAR NO BANCO DE DADOS (PRISMA / SUPABASE)
+    // 💾 SALVAR PEDIDO NO BANCO
     const order = await prisma.order.create({
       data: {
         customerName: customerData.nome,
-        cpf: cleanCPF, 
+        cpf: cleanCPF,
         whatsapp: cleanPhone,
         email: customerData.email,
+
         cep: customerData.cep,
         logradouro: customerData.logradouro,
         numero: customerData.numero,
         bairro: customerData.bairro,
         cidade: customerData.cidade,
         uf: customerData.uf,
+
         total: Number(total),
-        status: "AGUARDANDO_PAGAMENTO",
+        status: "PENDENTE",
         paymentId: String(paymentResponse.id),
-        
+
         items: {
-          create: cartItems.map((item) => ({
-            productId: String(item.id),
-            name: item.name,
-            price: Number(item.price),
-            quantity: Number(item.quantity || 1),
-          })),
+          create: itemsWithSku,
         },
       },
     });
 
-    console.log(`✅ Sucesso! Pedido #${order.id} gerado em Modo Teste.`);
-
-    return { 
-      success: true, 
+    return {
+      success: true,
       orderId: order.id,
-      pixCopyPaste: pixData.qr_code, 
-      pixQRCodeBase64: pixData.qr_code_base64 
+      pixCopyPaste: pixData.qr_code,
+      pixQRCodeBase64: pixData.qr_code_base64,
     };
-
   } catch (error: unknown) {
     const err = error as MercadoPagoErrorResponse;
-    console.error("🚨 ERRO DETALHADO NO MERCADO PAGO:", err);
-    
-    return { 
-      success: false, 
-      error: err.message || "Erro ao gerar PIX em Modo Teste." 
+
+    console.error("ERRO PIX:", err);
+
+    return {
+      success: false,
+      error: err.message || "Erro ao gerar PIX.",
     };
   }
 }

@@ -1,11 +1,28 @@
+/* ============================================================
+   ESTILO LIVRARIA PREMIUM - COMPLETO
+   Cores: Verde Petróleo, Dourado Nobre e Creme
+   UX: Alinhamento Horizontal Flexbox e Sombras Suaves
+   ============================================================
+*/
+
+:root {
+  --primary-deep: #0B4D42;   /* Verde sofisticado da imagem */
+  --accent-gold: #C5A059;    /* Dourado para detalhes e hover */
+  --accent-orange: #D96C41;  /* Laranja queimado para ações (Badge/Botões) */
+  --bg-creme: #FDF9F0;       /* Fundo suave estilo papel */
+  --text-white: #FFFFFF;
+  --text-dark: #1A1A1A;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .header {
-  background-color: #1a2a40;
-  color: #ffffff;
-  padding: 12px 0;
+  background-color: var(--primary-deep);
+  color: var(--text-white);
+  padding: 14px 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .container {
@@ -15,6 +32,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
+  flex-wrap: nowrap; /* Garante que nada pule para baixo */
 }
 
 /* --- LOGO --- */
@@ -23,72 +41,37 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  transition: opacity 0.2s;
+  flex-shrink: 0; /* Logo nunca esmaga */
 }
 
 .logo span {
   font-size: 1.4rem;
   font-weight: 800;
-  color: #d4af37;
+  color: var(--accent-gold);
   letter-spacing: -0.5px;
+  text-transform: uppercase;
 }
 
 .logoImg {
-  border-radius: 8px;
-  transition: transform 0.3s ease;
+  border-radius: 6px;
+  transition: var(--transition);
 }
 
-/* --- BUSCA DINÂMICA --- */
-.searchForm {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 6px 10px;
-  border-radius: 50px;
-  border: 1px solid transparent;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.searchOpen {
-  background: rgba(255, 255, 255, 0.12);
-  border-color: rgba(212, 175, 55, 0.4);
-  padding-left: 15px;
-}
-
-.searchInput {
-  width: 0;
-  opacity: 0;
-  border: none;
-  background: transparent;
-  color: white;
-  outline: none;
-  font-size: 0.9rem;
-  transition: all 0.3s ease;
-}
-
-.searchOpen .searchInput {
-  width: 180px;
-  opacity: 1;
-}
-
-.searchInput::placeholder {
-  color: rgba(255, 255, 255, 0.5);
-}
-
-/* --- NAVEGAÇÃO --- */
+/* --- NAVEGAÇÃO CENTRAL --- */
 .nav {
   display: flex;
   gap: 25px;
 }
 
 .nav a {
-  color: #ffffff;
+  color: var(--text-white);
   text-decoration: none;
   font-weight: 500;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   position: relative;
-  transition: color 0.3s;
+  transition: var(--transition);
 }
 
 .nav a::after {
@@ -98,57 +81,105 @@
   height: 2px;
   bottom: -5px;
   left: 0;
-  background-color: #d4af37;
-  transition: width 0.3s ease;
+  background-color: var(--accent-gold);
+  transition: var(--transition);
 }
 
-.nav a:hover { color: #d4af37; }
+.nav a:hover { color: var(--accent-gold); }
 .nav a:hover::after { width: 100%; }
 
-/* --- AÇÕES E ÍCONES --- */
+/* --- GRUPO DE AÇÕES (BUSCA, USER, CART) --- */
 .actions {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 18px; /* Espaço entre os ícones e busca */
+  flex-shrink: 0; /* Impede que o grupo seja esmagado */
 }
 
+/* --- BUSCA DINÂMICA --- */
+.searchForm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: var(--transition);
+}
+
+.searchOpen {
+  background: var(--text-white);
+  border-color: var(--accent-gold);
+  box-shadow: 0 0 10px rgba(197, 160, 89, 0.2);
+}
+
+.searchInput {
+  width: 0;
+  opacity: 0;
+  border: none;
+  background: transparent;
+  color: var(--text-dark);
+  outline: none;
+  font-size: 0.85rem;
+  transition: var(--transition);
+}
+
+.searchOpen .searchInput {
+  width: 160px; /* Tamanho equilibrado para manter tudo na linha */
+  opacity: 1;
+}
+
+.searchInput::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.searchOpen .searchInput::placeholder {
+  color: #999;
+}
+
+/* --- ÍCONES E BOTÕES --- */
 .icon {
   cursor: pointer;
-  color: #ffffff;
-  transition: all 0.2s ease;
+  color: var(--text-white);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
 }
 
 .icon:hover {
-  color: #d4af37;
+  color: var(--accent-gold);
   transform: translateY(-2px);
 }
 
 .iconButton {
   background: none;
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: 4px;
   cursor: pointer;
   color: inherit;
+  display: flex;
+  align-items: center;
 }
 
-/* --- NOVO: ÁREA DO USUÁRIO (BONEQUINHO) --- */
+/* --- ÁREA DO USUÁRIO --- */
 .userContainer {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .userDropdown {
   position: absolute;
-  top: 150%;
+  top: calc(100% + 15px);
   right: 0;
-  background-color: #ffffff;
+  background-color: var(--text-white);
   min-width: 220px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   padding: 12px 0;
   z-index: 1100;
+  border-top: 3px solid var(--accent-gold); /* Detalhe da imagem */
   animation: slideDown 0.25s ease-out;
 }
 
@@ -159,9 +190,10 @@
 
 .userGreeting {
   padding: 8px 16px;
-  color: #1a2a40;
+  color: var(--primary-deep);
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
   margin: 0;
 }
 
@@ -176,23 +208,23 @@
   align-items: center;
   gap: 12px;
   padding: 10px 16px;
-  color: #444 !important; /* Força cor escura no fundo branco */
+  color: #444 !important;
   text-decoration: none;
   font-size: 0.85rem;
   font-weight: 500;
-  transition: all 0.2s;
+  transition: var(--transition);
 }
 
 .userLink:hover {
-  background-color: #f8f9fa;
-  color: #d4af37 !important;
+  background-color: var(--bg-creme);
+  color: var(--accent-orange) !important;
 }
 
 /* --- CARRINHO --- */
 .cart {
   position: relative;
   text-decoration: none;
-  color: white;
+  color: var(--text-white);
   display: flex;
   align-items: center;
 }
@@ -201,8 +233,8 @@
   position: absolute;
   top: -8px;
   right: -10px;
-  background-color: #d4af37;
-  color: #1a2a40;
+  background-color: var(--accent-orange); /* Laranja para destaque */
+  color: var(--text-white);
   font-size: 0.7rem;
   font-weight: 800;
   min-width: 18px;
@@ -212,7 +244,7 @@
   justify-content: center;
   align-items: center;
   padding: 0 4px;
-  border: 2px solid #1a2a40;
+  border: 2px solid var(--primary-deep);
 }
 
 /* --- MOBILE --- */
@@ -220,40 +252,34 @@
   display: none;
   background: none;
   border: none;
-  color: #ffffff;
+  color: var(--text-white);
   cursor: pointer;
+}
+
+@media (max-width: 992px) {
+  .nav { gap: 15px; } /* Ajuste fino para tablets */
 }
 
 @media (max-width: 768px) {
   .menuButton { display: block; order: -1; }
-  .logo span { font-size: 1.1rem; }
   .nav {
     position: fixed;
     top: 0;
     left: -100%;
     width: 280px;
     height: 100vh;
-    background-color: #1a2a40;
+    background-color: var(--primary-deep);
     flex-direction: column;
     padding: 100px 30px;
     gap: 25px;
     transition: left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 1001;
-    box-shadow: 5px 0 15px rgba(0,0,0,0.3);
   }
   .navOpen { left: 0; }
   .searchOpen .searchInput { width: 110px; }
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(4px);
-    z-index: 1000;
-  }
-
-  /* Ajuste do dropdown no mobile para não cortar */
+  
   .userDropdown {
-    right: -50px; 
-    min-width: 200px;
+    right: -20px;
+    min-width: 180px;
   }
 }

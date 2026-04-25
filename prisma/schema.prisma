@@ -3,63 +3,73 @@ generator client {
 }
 
 datasource db {
-  // ✅ MUDAMOS DE SQLITE PARA POSTGRESQL AQUI:
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Order {
   id           String      @id @default(cuid())
   createdAt    DateTime    @default(now())
-  
-  // Dados do Cliente (Baseado no seu CustomerData)
+  updatedAt    DateTime    @updatedAt
+
+  // --- Dados do Cliente ---
   customerName String
-  cpf          String
+  cpf          String      // Necessário para a Nota Fiscal no Bling
   whatsapp     String
   email        String
-  
-  // Endereço de Entrega
-  cep          String
-  logradouro   String
-  numero       String
-  bairro       String
-  cidade       String
-  uf           String
-  
-  // Financeiro
-  total        Float       // O que o cliente pagou (Ex: R$ 100)
+
+  // --- Endereço de Entrega ---
+  cep         String
+  logradouro  String
+  numero      String
+  complemento String?     // Adicionado: importante para entregas
+  bairro      String
+  cidade      String
+  uf          String
+
+  // --- Financeiro ---
+  total        Float       // Valor final pago pelo cliente
   status       String      @default("PENDENTE") // PENDENTE, PAGO, ENVIADO, ENTREGUE, CANCELADO
-  paymentId    String?     // ID que vem do Mercado Pago/Stripe para conferência
+  paymentId    String?     // ID de transação do Mercado Pago
   
-  // Logística de Dropshipping
-  trackingCode String?     // O código que o fornecedor te passar depois
-  
+  // --- Integração Bling (ERP) ---
+  blingOrderId String?     @unique // ID do pedido dentro do Bling
+  nfeNumber    String?     // Número da Nota Fiscal gerada
+  nfeLink      String?     // Link para o PDF da nota, se disponível
+  syncStatus   String      @default("AGUARDANDO") // AGUARDANDO, SINCRONIZADO, ERRO
+
+  // --- Logística de Dropshipping ---
+  trackingCode String?     // Código que recebes do fornecedor
+  shippedAt    DateTime?   // Data em que o produto foi enviado
+
   items        OrderItem[]
 }
 
 model OrderItem {
   id        String  @id @default(cuid())
   productId String
+  sku       String  // O Bling usa o SKU para identificar qual produto foi vendido
   name      String
-  price     Float   // Preço de venda no momento da compra
+  price     Float   // Preço de venda unitário
   quantity  Int
-  
+
   order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId   String
 }
 
 model Product {
   id          String   @id @default(cuid())
+  sku         String   @unique // Identificador único comercial (Ex: BBL-001)
   name        String
   description String?
   category    String
   image       String
-  
-  // ✅ ESSENCIAL PARA DROPSHIPPING
-  price       Float    // Preço de Venda (Ex: R$ 100)
-  costPrice   Float    @default(0) // Preço de Custo no Fornecedor (Ex: R$ 80)
-  supplierUrl String?  // Link do fornecedor (AliExpress, Shopee, etc)
-  
-  active      Boolean  @default(true) // Em vez de stock, usamos se o produto está ativo
+
+  // --- Valores de Dropshipping ---
+  price       Float    // Preço que o cliente paga
+  costPrice   Float    @default(0) // Preço que pagas ao fornecedor
+  supplierUrl String?  // Link direto para facilitar a tua compra
+
+  active      Boolean  @default(true)
   createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
