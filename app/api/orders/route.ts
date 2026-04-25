@@ -1,13 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
-import { MercadoPagoConfig, Payment } from 'mercadopago';
+import { MercadoPagoConfig, Payment } from "mercadopago";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// 1. Configuração do Cliente Mercado Pago
-const client = new MercadoPagoConfig({ 
-  accessToken: process.env.MP_ACCESS_TOKEN || '' 
+// 🔹 Cliente Mercado Pago
+const client = new MercadoPagoConfig({
+  accessToken: process.env.MP_ACCESS_TOKEN || "",
 });
 
 interface OrderRequestBody {
@@ -21,9 +21,9 @@ interface OrderRequestBody {
   bairro: string;
   cidade: string;
   uf: string;
-  total: number; 
+  total: number;
   items: {
-    id: string; 
+    id: string;
     name: string;
     price: number;
     quantity: number;
@@ -31,7 +31,7 @@ interface OrderRequestBody {
 }
 
 /**
- * [POST] - CRIAR PEDIDO E GERAR PIX
+ * [POST] - CRIAR PEDIDO + PIX
  */
 export async function POST(req: Request) {
   try {
@@ -41,7 +41,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Carrinho vazio" }, { status: 400 });
     }
 
-    // A. SALVAR NO BANCO DE DADOS (PRISMA/SUPABASE)
+    // 🔥 BUSCAR PRODUTOS NO BANCO (SEGURANÇA REAL)
+    const products = await prisma.product.findMany({
+      where: {
+        id: {
+          in: body.items.map((item) => item.id),
+        },
+      },
+    });
+
+    // A. SALVAR PEDIDO
     const order = await prisma.order.create({
       data: {
         customerName: body.customerName,
@@ -56,53 +65,70 @@ export async function POST(req: Request) {
         uf: body.uf,
         total: Number(body.total),
         status: "PENDENTE",
+
         items: {
-          create: body.items.map((item) => ({
-            productId: item.id,
-            name: item.name,
-            price: Number(item.price),
-            quantity: Number(item.quantity),
-          })),
+          create: body.items.map((item) => {
+            const product = products.find((p) => p.id === item.id);
+
+            return {
+              productId: item.id,
+              sku: product?.sku || item.id, // 🔥 GARANTE QUE NÃO QUEBRA
+              name: item.name,
+              price: Number(item.price),
+              quantity: Number(item.quantity),
+            };
+          }),
         },
       },
       include: { items: true },
     });
 
-    // B. GERAR O PAGAMENTO NO MERCADO PAGO
+    // B. GERAR PIX (Mercado Pago)
     const payment = new Payment(client);
 
     const paymentResponse = await payment.create({
       body: {
         transaction_amount: Number(body.total),
         description: `Pedido #${order.id} - FGS Artigos`,
-        payment_method_id: 'pix',
+        payment_method_id: "pix",
         payer: {
           email: body.email,
-          first_name: body.customerName.split(' ')[0],
+          first_name: body.customerName.split(" ")[0],
           identification: {
-            type: 'CPF',
-            number: body.cpf.replace(/\D/g, ''), 
+            type: "CPF",
+            number: body.cpf.replace(/\D/g, ""),
           },
         },
-        date_of_expiration: new Date(Date.now() + 30 * 60000).toISOString(), 
+        date_of_expiration: new Date(
+          Date.now() + 30 * 60000
+        ).toISOString(),
       },
     });
 
-    // C. RESPOSTA DE SUCESSO PARA O FRONT-END
+    const pix =
+      paymentResponse.point_of_interaction?.transaction_data;
+
+    // C. RESPOSTA
     return NextResponse.json({
       orderId: order.id,
       pix: {
-        copy_paste: paymentResponse.point_of_interaction?.transaction_data?.qr_code,
-        qrcode_base64: paymentResponse.point_of_interaction?.transaction_data?.qr_code_base64,
-      }
+        copy_paste: pix?.qr_code,
+        qrcode_base64: pix?.qr_code_base64,
+      },
     });
-
   } catch (error: unknown) {
     if (error instanceof Error) {
-      console.error("❌ Erro no Processamento:", error.message);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error("❌ Erro:", error.message);
+      return NextResponse.json(
+        { error: error.message },
+        { status: 500 }
+      );
     }
-    return NextResponse.json({ error: "Erro interno no servidor" }, { status: 500 });
+
+    return NextResponse.json(
+      { error: "Erro interno no servidor" },
+      { status: 500 }
+    );
   }
 }
 
@@ -115,10 +141,14 @@ export async function GET() {
       include: { items: true },
       orderBy: { createdAt: "desc" },
     });
+
     return NextResponse.json(orders);
   } catch (error: unknown) {
     console.error("❌ Erro ao buscar pedidos:", error);
-    return NextResponse.json({ error: "Erro ao buscar pedidos" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro ao buscar pedidos" },
+      { status: 500 }
+    );
   }
 }
 
@@ -130,12 +160,25 @@ export async function DELETE(req: Request) {
     const { searchParams } = new URL(req.url);
     const id = searchParams.get("id");
 
-    if (!id) return NextResponse.json({ error: "ID ausente" }, { status: 400 });
+    if (!id) {
+      return NextResponse.json(
+        { error: "ID ausente" },
+        { status: 400 }
+      );
+    }
 
-    await prisma.order.delete({ where: { id } });
-    return NextResponse.json({ message: "Pedido excluído" });
+    await prisma.order.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({
+      message: "Pedido excluído",
+    });
   } catch (error: unknown) {
     console.error("❌ Erro ao excluir pedido:", error);
-    return NextResponse.json({ error: "Erro ao excluir" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Erro ao excluir" },
+      { status: 500 }
+    );
   }
 }
